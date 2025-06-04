@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/train-icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    
+    <!-- Primary Meta Tags -->
+    <title>The Train Station | Venue Management</title>
+    <meta name="title" content="The Train Station | Venue Management">
+    <meta name="description" content="Comprehensive venue management system for The Train Station - managing events, artists, customers, inventory, and more.">
+    <meta name="keywords" content="venue management, events, artists, booking, dashboard, train station">
+    <meta name="author" content="TrainStation Dashboard">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="application-name" content="TrainStation Dashboard">
+    <meta name="theme-color" content="#1f2937">
+    <meta name="msapplication-TileColor" content="#1f2937">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+    
+    <!-- Mobile Optimization -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TrainStation">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1f2937">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://taupe-moonbeam-5b2c25.netlify.app/">
+    <meta property="og:title" content="The Train Station | Venue Management">
+    <meta property="og:description" content="Comprehensive venue management system for The Train Station - managing events, artists, customers, inventory, and more.">
+    <meta property="og:image" content="https://images.pexels.com/photos/1540406/pexels-photo-1540406.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
+    <meta property="og:site_name" content="TrainStation Dashboard">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://taupe-moonbeam-5b2c25.netlify.app/">
+    <meta property="twitter:title" content="The Train Station | Venue Management">
+    <meta property="twitter:description" content="Comprehensive venue management system for The Train Station - managing events, artists, customers, inventory, and more.">
+    <meta property="twitter:image" content="https://images.pexels.com/photos/1540406/pexels-photo-1540406.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
+    <meta name="twitter:creator" content="@trainstation">
+    <!-- Security policies disabled for development -->
+    <link rel="preconnect" href="https://eszussdmhomiimnrswiu.supabase.co" crossorigin>
+    <link rel="dns-prefetch" href="https://eszussdmhomiimnrswiu.supabase.co">
+    <!-- Performance Optimization -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://api.supabase.co" crossorigin>
+    <link rel="preconnect" href="https://eszussdmhomiimnrswiu.supabase.co" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://api.supabase.co">
+    <link rel="dns-prefetch" href="https://eszussdmhomiimnrswiu.supabase.co">
+    
+    <!-- Fonts with display=swap for better performance -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Critical CSS for preventing layout shift -->
+    <style>
+      html, body, #root {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background-color: #111827;
+        color: #f9fafb;
+        overflow-x: hidden;
+      }
+      
+      /* Loading spinner */
+      .app-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+      
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #374151;
+        border-top: 3px solid #3b82f6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Smooth scrolling for iOS */
+      * {
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Prevent horizontal scroll on mobile */
+      body {
+        overflow-x: hidden;
+        position: relative;
+      }
+      
+      /* Safe area handling for iPhone X and newer */
+      @supports (padding: max(0px)) {
+        body {
+          padding-left: max(0px, env(safe-area-inset-left));
+          padding-right: max(0px, env(safe-area-inset-right));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <!-- Loading screen shown until React loads -->
+      <div class="app-loading">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
