@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { toast } from 'react-hot-toast';
 import { 
   User, 
   Shield, 
@@ -9,7 +10,7 @@ import {
 } from 'lucide-react';
 
 const Settings: React.FC = memo(() => {
-  const { userProfile } = useAuth();
+  const { userProfile, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   const [fullName, setFullName] = useState('');
 
@@ -22,10 +23,15 @@ const Settings: React.FC = memo(() => {
     setFullName(e.target.value);
   }, []);
 
-  const handleSaveChanges = useCallback(() => {
-    // TODO: Implement save functionality
-    console.log('Saving changes...', { fullName });
-  }, [fullName]);
+  const handleSaveChanges = useCallback(async () => {
+    try {
+      await updateProfile({ full_name: fullName });
+      toast.success('Profile updated');
+    } catch (error) {
+      console.error('Error saving changes:', error);
+      toast.error('Failed to update profile');
+    }
+  }, [fullName, updateProfile]);
 
   return (
     <div className="p-6 space-y-6">

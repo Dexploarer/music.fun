@@ -519,7 +519,30 @@ export const validateStaffBusinessRules = {
       };
     }
 
-    // TODO: Check for scheduling conflicts using _startTime and _endTime (would need existing schedules)
+    if (staff.schedules) {
+      const start = new Date(_startTime);
+      const end = new Date(_endTime);
+
+      for (const sched of staff.schedules) {
+        if (['cancelled', 'completed', 'no_show'].includes(sched.status)) continue;
+
+        const schedStart = new Date(sched.startTime);
+        const schedEnd = new Date(sched.endTime);
+
+        const overlaps =
+          (start >= schedStart && start < schedEnd) ||
+          (end > schedStart && end <= schedEnd) ||
+          (start <= schedStart && end >= schedEnd);
+
+        if (overlaps) {
+          return {
+            valid: false,
+            reason: 'Schedule conflicts with an existing shift'
+          };
+        }
+      }
+    }
+
     return { valid: true };
   },
 
