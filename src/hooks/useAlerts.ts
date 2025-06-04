@@ -14,8 +14,13 @@ interface AlertData {
  */
 export async function generateRealTimeAlert(data: AlertData): Promise<string> {
   const { metric_name, current_value, threshold, comparison } = data;
-  
-  const prompt = `You are an AI operations assistant for The Train Station venue. 
+
+  // Provide a basic alert if the OpenAI API key is not configured
+  if (!import.meta.env.VITE_OPENAI_API_KEY) {
+    return `Alert: ${metric_name} is ${comparison} threshold (${current_value}/${threshold}).`;
+  }
+
+  const prompt = `You are an AI operations assistant for The Train Station venue.
   
 Create a concise, actionable alert for the following situation:
 
