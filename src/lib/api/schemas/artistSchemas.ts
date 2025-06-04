@@ -278,19 +278,21 @@ export const validateArtistBusinessRules = {
    * Check if an artist can be edited
    */
   canEdit: (artist: Artist): { valid: boolean; reason?: string } => {
-    // Artists can generally be edited unless they have upcoming performances
-    // and are in a confirmed status
-    
-    // TODO: Implement specific business logic based on artist status and upcoming performances
-    // For now, check if artist has upcoming performances in confirmed status
+    // Artists can generally be edited unless they have an upcoming confirmed performance
+
     if (artist.status === 'Confirmed' && artist.nextPerformance) {
       const nextPerfDate = new Date(artist.nextPerformance);
       const now = new Date();
-      if (nextPerfDate > now) {
-        // Could add restrictions here if needed
+
+      // Restrict edits if the next performance is within the next 7 days
+      if (nextPerfDate.getTime() - now.getTime() < 7 * 24 * 60 * 60 * 1000) {
+        return {
+          valid: false,
+          reason: 'Artist with an imminent performance cannot be edited'
+        };
       }
     }
-    
+
     return { valid: true };
   },
 
