@@ -2,7 +2,7 @@
 
 ## 📋 Overview
 
-This document provides a comprehensive overview of all security measures implemented in the TrainStation Dashboard application. The system achieves **enterprise-grade security** with a 95/100 security rating and 100% OWASP Top 10 compliance.
+This document outlines the security features currently implemented in the TrainStation Dashboard. The platform follows industry best practices and aims for broad coverage of the OWASP Top 10, but security reviews are still ongoing.
 
 ## 🛡️ Security Architecture
 
@@ -196,11 +196,11 @@ RATE_LIMIT_MAX=100 # requests per window
 ## 📊 Security Metrics
 
 ### Key Performance Indicators
-- **Authentication Success Rate**: >99.5%
-- **Security Test Coverage**: 98.5% (192/195 tests passing)
-- **Vulnerability Count**: 0 critical, 0 high
-- **Security Header Score**: 100%
-- **OWASP Top 10 Compliance**: 100%
+- **Authentication Success Rate**: target >95%
+- **Security Test Coverage**: work in progress
+- **Vulnerability Count**: no known critical issues
+- **Security Header Score**: aiming for A rating
+- **OWASP Top 10 Compliance**: under review
 
 ### Regular Assessments
 - **Security Audits**: Quarterly comprehensive audits
