@@ -1,5 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { corsHeaders } from '../_shared/cors.ts';
+import { securityHeaders } from '../../../src/lib/api/auth.ts';
 
 // Import our services
 import { CustomerService } from '../../../src/lib/api/services/customerService.ts';
@@ -29,6 +30,7 @@ const createResponse = (data: unknown, status = 200) => {
     headers: {
       'Content-Type': 'application/json',
       ...corsHeaders,
+      ...securityHeaders,
     },
   });
 };
@@ -50,6 +52,7 @@ const createErrorResponse = (message: string, status = 400) => {
       headers: {
         'Content-Type': 'application/json',
         ...corsHeaders,
+        ...securityHeaders,
       },
     }
   );

@@ -5,6 +5,7 @@ import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus, Filter, Sear
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Breadcrumbs, { useBreadcrumbs } from '../components/navigation/Breadcrumbs';
+import { useEvents } from '../hooks/useEvents';
 import '../components/calendar/calendar-styles.css';
 
 const localizer = momentLocalizer(moment);
@@ -36,76 +37,32 @@ const CalendarView: React.FC<CalendarViewProps> = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterGenre, setFilterGenre] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const { events: fetchedEvents, loading, error } = useEvents();
 
-  // Load events from API or mock data
+  const isLoading = loading.isLoading;
+
+  // Transform events from API to calendar format
   useEffect(() => {
-    const loadEvents = async () => {
-      setIsLoading(true);
-      try {
-        // Mock data for demonstration
-        const mockEvents: Event[] = [
-          {
-            id: '1',
-            title: 'Blues Night with River Junction',
-            start: new Date(2024, 0, 15, 19, 0), // Jan 15, 2024, 7:00 PM
-            end: new Date(2024, 0, 15, 22, 0),
-            description: 'An evening of authentic blues music with local favorites River Junction',
-            venue: 'Main Stage',
-            genre: 'Blues',
-            ticketPrice: 25,
-            status: 'upcoming',
-            artistIds: ['1']
-          },
-          {
-            id: '2',
-            title: 'Acoustic Sunday Sessions',
-            start: new Date(2024, 0, 21, 15, 0), // Jan 21, 2024, 3:00 PM
-            end: new Date(2024, 0, 21, 18, 0),
-            description: 'Intimate acoustic performances in our cozy setting',
-            venue: 'Side Stage',
-            genre: 'Folk',
-            ticketPrice: 15,
-            status: 'upcoming',
-            artistIds: ['2', '3']
-          },
-          {
-            id: '3',
-            title: 'Country Crossroads',
-            start: new Date(2024, 0, 28, 20, 0), // Jan 28, 2024, 8:00 PM
-            end: new Date(2024, 0, 28, 23, 0),
-            description: 'Modern country meets classic Americana',
-            venue: 'Main Stage',
-            genre: 'Country',
-            ticketPrice: 30,
-            status: 'upcoming',
-            artistIds: ['4']
-          },
-          {
-            id: '4',
-            title: 'Jazz at the Station',
-            start: new Date(2024, 1, 5, 19, 30), // Feb 5, 2024, 7:30 PM
-            end: new Date(2024, 1, 5, 22, 30),
-            description: 'Smooth jazz and sophisticated vibes',
-            venue: 'Main Stage',
-            genre: 'Jazz',
-            ticketPrice: 35,
-            status: 'upcoming',
-            artistIds: ['5']
-          }
-        ];
-        
-        setEvents(mockEvents);
-      } catch (error) {
-        toast.error('Failed to load events');
-        console.error('Error loading events:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    if (error) {
+      toast.error(error.message);
+    }
 
-    loadEvents();
-  }, []);
+    if (fetchedEvents) {
+      const mapped = fetchedEvents.map(ev => ({
+        id: ev.id,
+        title: ev.title,
+        start: new Date(`${ev.date}T${ev.startTime}`),
+        end: new Date(`${ev.date}T${ev.endTime}`),
+        description: ev.description,
+        venue: '',
+        genre: ev.genre,
+        ticketPrice: ev.ticketPrice,
+        status: ev.status,
+        artistIds: ev.artistIds
+      }));
+      setEvents(mapped);
+    }
+  }, [fetchedEvents, error]);
 
   // Filter events based on search and filter criteria
   const filteredEvents = events.filter(event => {

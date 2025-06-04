@@ -35,18 +35,18 @@ The Train Station Dashboard is a **production-ready venue management platform** 
 
 | **Module** | **Description** | **Status** |
 |------------|----------------|------------|
-| 📊 **Analytics Dashboard** | Real-time metrics, KPIs, and business intelligence | ✅ Active |
-| 🎤 **Artist Management** | Booking, contracts, rider management, and artist CRM | ✅ Active |
-| 🎫 **Ticketing System** | Event ticketing, seat management, and sales tracking | ✅ Active |
-| 💰 **Financial Management** | Revenue tracking, expense management, and reporting | ✅ Active |
-| 📦 **Inventory Control** | Stock management, ordering, and supply chain tracking | ✅ Active |
-| 🔧 **Equipment Management** | Asset tracking, maintenance schedules, and repairs | ✅ Active |
-| 👥 **CRM & Customer Management** | Customer profiles, engagement, and loyalty programs | ✅ Active |
-| 📅 **Event Calendar** | Scheduling, planning, and venue availability management | ✅ Active |
-| 🏗️ **Floor Plan Editor** | Interactive venue layout design and management | ✅ Active |
-| 📈 **Marketing Tools** | Campaign management, social media integration | ✅ Active |
-| 🤖 **AI Integration** | Groq/Llama AI for insights, content generation, and optimization | ✅ Active |
-| ⚙️ **Settings & Configuration** | User management, roles, and system configuration | ✅ Active |
+| 📊 **Analytics Dashboard** | Real-time metrics and KPIs | 🚧 In Progress |
+| 🎤 **Artist Management** | Booking, contracts, and artist CRM | 🚧 In Progress |
+| 🎫 **Ticketing System** | Event ticketing and seat management | 🚧 In Progress |
+| 💰 **Financial Management** | Revenue tracking and reports | 🚧 In Progress |
+| 📦 **Inventory Control** | Stock management and ordering | 🟡 Beta |
+| 🔧 **Equipment Management** | Asset tracking and repairs | ⏳ Planned |
+| 👥 **CRM & Customer Management** | Customer profiles and engagement | 🚧 In Progress |
+| 📅 **Event Calendar** | Scheduling and venue availability | 🟡 Beta |
+| 🏗️ **Floor Plan Editor** | Interactive layout design | ⏳ Planned |
+| 📈 **Marketing Tools** | Campaign management | ⏳ Planned |
+| 🤖 **AI Integration** | Content generation and insights | 🟡 Beta |
+| ⚙️ **Settings & Configuration** | User roles and system config | 🚧 In Progress |
 
 ### 🎯 Target Users
 
