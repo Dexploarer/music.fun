@@ -646,8 +646,30 @@ export class StaffService {
    * Check for schedule conflicts
    */
   private async checkScheduleConflicts(schedule: CreateScheduleRequest): Promise<{ valid: boolean; reason?: string }> {
-    // This would implement schedule conflict checking logic
-    // For now, return a simple validation
+    const response = await this.adapter.executeQuery(
+      {
+        tableName: 'staff_schedules',
+        rateLimitKey: 'staff:schedules:conflict-check',
+      },
+      async () => {
+        return this.adapter
+          .buildQuery('staff_schedules', {
+            select: 'id,start_time,end_time',
+            filters: { staff_id: schedule.staffId },
+          })
+          .lt('start_time', schedule.endTime)
+          .gt('end_time', schedule.startTime);
+      },
+      'read'
+    );
+
+    if (response.success) {
+      const conflicts = Array.isArray(response.data) ? response.data : [response.data];
+      if (conflicts.length > 0) {
+        return { valid: false, reason: 'Schedule overlaps with existing shift' };
+      }
+    }
+
     return { valid: true };
   }
 
@@ -655,22 +677,91 @@ export class StaffService {
    * Calculate staff metrics
    */
   async calculateStaffMetrics(staffId: string): Promise<ApiResponse<any>> {
-    // This would typically involve complex calculations across schedules and time entries
-    // For now, return a placeholder structure
+    const timeEntriesResponse = await this.adapter.executeQuery(
+      {
+        tableName: 'time_entries',
+        rateLimitKey: 'staff:metrics',
+        requiredRole: UserRole.MANAGER,
+      },
+      async () => {
+        return this.adapter
+          .buildQuery('time_entries', {
+            select: 'clock_in_time, clock_out_time, total_hours',
+            filters: { staff_id: staffId },
+            orderBy: { column: 'clock_in_time', ascending: true },
+          });
+      },
+      'read'
+    );
+
+    if (!timeEntriesResponse.success) {
+      return timeEntriesResponse as ApiResponse<any>;
+    }
+
+    const entries = Array.isArray(timeEntriesResponse.data)
+      ? timeEntriesResponse.data
+      : [];
+
+    let totalHours = 0;
+    let overtime = 0;
+    let firstDate: Date | null = null;
+    let lastDate: Date | null = null;
+
+    for (const entry of entries as any[]) {
+      const hours = entry.total_hours ?? 0;
+      totalHours += hours;
+      if (hours > 8) overtime += hours - 8;
+
+      const start = new Date(entry.clock_in_time);
+      if (!firstDate || start < firstDate) firstDate = start;
+      if (!lastDate || start > lastDate) lastDate = start;
+    }
+
+    const weeks = firstDate && lastDate
+      ? Math.max(1, (lastDate.getTime() - firstDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
+      : 1;
+    const averageHoursPerWeek = totalHours / weeks;
+
+    const certResponse = await this.adapter.executeQuery(
+      {
+        tableName: 'staff_certifications',
+        rateLimitKey: 'staff:metrics',
+        requiredRole: UserRole.MANAGER,
+      },
+      async () => {
+        return this.adapter
+          .buildQuery('staff_certifications', {
+            select: 'expiry_date',
+            filters: { staff_id: staffId },
+          });
+      },
+      'read'
+    );
+
+    if (!certResponse.success) {
+      return certResponse as ApiResponse<any>;
+    }
+
+    const certs = Array.isArray(certResponse.data) ? certResponse.data : [];
+    const now = Date.now();
+    const upcomingExp = certs.filter((c: any) => {
+      return c.expiry_date && new Date(c.expiry_date).getTime() - now < 30 * 24 * 60 * 60 * 1000;
+    }).length;
+
     return {
       success: true,
       data: {
-        totalHoursWorked: 0,
-        overtimeHours: 0,
+        totalHoursWorked: totalHours,
+        overtimeHours: overtime,
         attendanceRate: 100,
-        averageHoursPerWeek: 40,
-        certificationCount: 0,
-        upcomingCertificationExpirations: 0,
+        averageHoursPerWeek: Number(averageHoursPerWeek.toFixed(2)),
+        certificationCount: certs.length,
+        upcomingCertificationExpirations: upcomingExp,
       },
       meta: {
         requestId: crypto.randomUUID(),
-        source: 'calculation'
-      }
+        source: 'calculation',
+      },
     };
   }
 

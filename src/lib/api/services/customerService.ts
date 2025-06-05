@@ -564,23 +564,59 @@ export class CustomerService {
    * Calculate customer metrics
    */
   async calculateCustomerMetrics(customerId: string): Promise<ApiResponse<any>> {
-    // This would typically involve complex queries across multiple tables
-    // For now, return a placeholder structure
+    const interactionsCount = await this.adapter.executeQuery(
+      {
+        tableName: 'customer_interactions',
+        rateLimitKey: 'customers:metrics',
+      },
+      async () => {
+        return this.adapter
+          .buildQuery('customer_interactions', {
+            select: 'count',
+            filters: { customer_id: customerId },
+          })
+          .select('count(*)', { count: 'exact' })
+          .single();
+      },
+      'read'
+    );
+
+    const purchasesTotal = await this.adapter.executeQuery(
+      {
+        tableName: 'financial_transactions',
+        rateLimitKey: 'customers:metrics',
+      },
+      async () => {
+        return this.adapter
+          .buildQuery('financial_transactions', {
+            select: 'sum',
+            filters: { customer_id: customerId, type: 'income' },
+          })
+          .select('sum(amount)', { count: 'exact' })
+          .single();
+      },
+      'read'
+    );
+
+    const totalInteractions =
+      interactionsCount.success && interactionsCount.data?.count
+        ? interactionsCount.data.count
+        : 0;
+    const totalSpent =
+      purchasesTotal.success && purchasesTotal.data?.sum
+        ? purchasesTotal.data.sum
+        : 0;
+
     return {
       success: true,
       data: {
-        lifetimeValue: 0,
-        totalPurchases: 0,
-        averageOrderValue: 0,
-        lastPurchaseDate: null,
-        interactionCount: 0,
-        engagementScore: 0,
-        churnRisk: 'low'
+        totalInteractions,
+        totalSpent,
       },
       meta: {
         requestId: crypto.randomUUID(),
-        source: 'calculation'
-      }
+        source: 'calculation',
+      },
     };
   }
 
