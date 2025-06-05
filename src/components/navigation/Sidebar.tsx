@@ -222,10 +222,16 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onToggle, isMobile: propIsMobil
               label="AI Assistant" 
               onClick={handleNavClick}
             />
-            <NavItem 
-              to="/settings" 
-              icon={<SettingsIcon size={18} />} 
-              label="Settings" 
+            <NavItem
+              to="/settings"
+              icon={<SettingsIcon size={18} />}
+              label="Settings"
+              onClick={handleNavClick}
+            />
+            <NavItem
+              to="/settings/user-roles"
+              icon={<UserCog size={18} />}
+              label="User Roles"
               onClick={handleNavClick}
             />
           </div>
