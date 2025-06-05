@@ -47,6 +47,7 @@ const Projects = lazy(() => import('./pages/Projects'));
 const Settings = lazy(() => import('./pages/Settings'));
 const AITools = lazy(() => import('./pages/AITools'));
 const StaffManagement = lazy(() => import('./pages/StaffManagement'));
+const UserRoles = lazy(() => import('./pages/UserRoles'));
 
 // Import the newly created pages
 const CalendarView = lazy(() => import('./pages/CalendarView'));
@@ -272,9 +273,13 @@ const App: React.FC = () => {
                   />
 
                   {/* Settings */}
-                  <Route 
-                    path="settings" 
-                    element={<LazyRoute component={Settings} componentName="Settings" fallbackType="card" />} 
+                  <Route
+                    path="settings"
+                    element={<LazyRoute component={Settings} componentName="Settings" fallbackType="card" />}
+                  />
+                  <Route
+                    path="settings/user-roles"
+                    element={<LazyRoute component={UserRoles} componentName="UserRoles" fallbackType="table" />}
                   />
 
                   {/* AI Tools */}

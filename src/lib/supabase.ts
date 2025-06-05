@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../types/supabase';
+import type { UserRole, SecuritySettings } from '../contexts/AuthContext';
 import type { 
   Event, 
   Artist, 
@@ -3092,6 +3093,64 @@ export const staffApi = {
       approvedBy: data.approved_by,
       notes: data.notes,
       createdAt: data.created_at,
+      updatedAt: data.updated_at
+    };
+  }
+};
+
+// User Management API
+export const userApi = {
+  async getUserProfiles() {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .order('email', { ascending: true });
+
+    if (error) throw error;
+
+    return data.map(profile => ({
+      id: profile.id,
+      email: profile.email,
+      fullName: profile.full_name,
+      role: profile.role,
+      department: profile.department,
+      isActive: profile.is_active,
+      createdAt: profile.created_at,
+      updatedAt: profile.updated_at,
+      securitySettings: profile.security_settings
+    }));
+  },
+
+  async updateUserRole(id: string, role: UserRole) {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .update({ role })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return {
+      id: data.id,
+      email: data.email,
+      role: data.role,
+      updatedAt: data.updated_at
+    };
+  },
+
+  async updateSecuritySettings(id: string, settings: Partial<SecuritySettings>) {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .update({ security_settings: settings })
+      .eq('id', id)
+      .select('security_settings, updated_at')
+      .single();
+
+    if (error) throw error;
+
+    return {
+      securitySettings: data.security_settings,
       updatedAt: data.updated_at
     };
   }
