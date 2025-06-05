@@ -684,22 +684,87 @@ export class InventoryService {
    * Calculate item metrics
    */
   async calculateItemMetrics(itemId: string): Promise<ApiResponse<any>> {
-    // This would typically involve complex calculations across transactions
-    // For now, return a placeholder structure
+    const transactionsResponse = await this.adapter.executeQuery(
+      {
+        tableName: 'inventory_transactions',
+        rateLimitKey: 'inventory:metrics',
+      },
+      async () => {
+        return this.adapter
+          .buildQuery('inventory_transactions', {
+            select: 'transaction_date, transaction_type, quantity, unit_cost',
+            filters: { item_id: itemId },
+            orderBy: { column: 'transaction_date', ascending: true },
+          });
+      },
+      'read'
+    );
+
+    if (!transactionsResponse.success) {
+      return transactionsResponse as ApiResponse<any>;
+    }
+
+    const transactions = Array.isArray(transactionsResponse.data)
+      ? transactionsResponse.data
+      : [];
+
+    let totalInQty = 0;
+    let totalInCost = 0;
+    let totalOutQty = 0;
+    let firstDate: Date | null = null;
+    let lastDate: Date | null = null;
+    let lastRestock: string | null = null;
+
+    for (const tx of transactions as any[]) {
+      const qty = tx.quantity ?? 0;
+      const date = new Date(tx.transaction_date);
+      if (!firstDate || date < firstDate) firstDate = date;
+      if (!lastDate || date > lastDate) lastDate = date;
+
+      if (['in', 'adjustment_positive', 'transfer'].includes(tx.transaction_type)) {
+        totalInQty += qty;
+        totalInCost += (tx.unit_cost ?? 0) * qty;
+        if (!lastRestock || date > new Date(lastRestock)) {
+          lastRestock = tx.transaction_date;
+        }
+      }
+
+      if (['out', 'adjustment_negative', 'damaged', 'expired'].includes(tx.transaction_type)) {
+        totalOutQty += qty;
+      }
+    }
+
+    const itemResponse = await this.getInventoryItemById(itemId);
+    if (!itemResponse.success) {
+      return itemResponse as ApiResponse<any>;
+    }
+    const item = itemResponse.data as any;
+
+    const averageCost = totalInQty ? totalInCost / totalInQty : 0;
+    const avgStock = (item.currentStock + totalInQty) / 2 || 1;
+    const turnoverRate = totalOutQty ? totalOutQty / avgStock : 0;
+
+    const daysSpan = firstDate && lastDate ? (lastDate.getTime() - firstDate.getTime()) / (24 * 60 * 60 * 1000) : 0;
+    const avgDailyUsage = daysSpan > 0 ? totalOutQty / daysSpan : 0;
+    const daysOfSupply = avgDailyUsage > 0 ? item.currentStock / avgDailyUsage : null;
+
+    const profitMargin = item.sellPrice ? ((item.sellPrice - averageCost) / item.sellPrice) * 100 : 0;
+    const totalValueOnHand = item.currentStock * averageCost;
+
     return {
       success: true,
       data: {
-        turnoverRate: 0,
-        averageCost: 0,
-        profitMargin: 0,
-        daysOfSupply: 0,
-        lastRestockDate: null,
-        totalValueOnHand: 0
+        turnoverRate,
+        averageCost,
+        profitMargin,
+        daysOfSupply,
+        lastRestockDate: lastRestock,
+        totalValueOnHand,
       },
       meta: {
         requestId: crypto.randomUUID(),
-        source: 'calculation'
-      }
+        source: 'calculation',
+      },
     };
   }
 

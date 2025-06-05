@@ -693,8 +693,34 @@ export class FinanceService {
    * Check budget compliance for a transaction
    */
   private async checkBudgetCompliance(transaction: CreateTransactionRequest): Promise<{ valid: boolean; reason?: string }> {
-    // This would implement budget checking logic
-    // For now, return a simple validation
+    const { category, amount } = transaction;
+    const budgetResponse = await this.adapter.executeQuery(
+      {
+        tableName: 'budgets',
+        rateLimitKey: 'finance:budget:check',
+        requiredRole: UserRole.MANAGER,
+      },
+      async () => {
+        return this.adapter
+          .buildQuery('budgets', {
+            select: 'amount, spent, period_start, period_end',
+            filters: { category },
+          })
+          .lte('period_start', transaction.date)
+          .gte('period_end', transaction.date)
+          .limit(1);
+      },
+      'read'
+    );
+
+    if (budgetResponse.success && budgetResponse.data) {
+      const budget = Array.isArray(budgetResponse.data) ? budgetResponse.data[0] : budgetResponse.data;
+      const remaining = budget.amount - budget.spent;
+      if (remaining < amount) {
+        return { valid: false, reason: 'Budget exceeded for category' };
+      }
+    }
+
     return { valid: true };
   }
 
@@ -702,20 +728,77 @@ export class FinanceService {
    * Calculate transaction metrics
    */
   async calculateTransactionMetrics(transactionId: string): Promise<ApiResponse<any>> {
-    // This would typically involve complex calculations
-    // For now, return a placeholder structure
+    const txResponse = await this.getTransactionById(transactionId);
+    if (!txResponse.success) {
+      return txResponse as ApiResponse<any>;
+    }
+
+    const tx = txResponse.data as any;
+    const impactOnCashFlow = ['income', 'refund'].includes(tx.type) ? tx.amount : -tx.amount;
+    const taxImpact = tx.taxAmount ?? 0;
+
+    const monthStart = new Date(tx.date);
+    monthStart.setDate(1);
+
+    const categoryTotals = await this.adapter.executeQuery(
+      {
+        tableName: 'financial_transactions',
+        rateLimitKey: 'finance:metrics',
+      },
+      async () => {
+        return this.adapter
+          .buildQuery('financial_transactions', {
+            select: 'amount',
+            filters: { category: tx.category },
+          })
+          .gte('date', monthStart.toISOString())
+          .lte('date', tx.date);
+      },
+      'read'
+    );
+
+    let categoryTotal = 0;
+    if (categoryTotals.success) {
+      const rows = Array.isArray(categoryTotals.data) ? categoryTotals.data : [];
+      categoryTotal = rows.reduce((sum: number, r: any) => sum + (r.amount ?? 0), 0);
+    }
+
+    const budgetCheck = await this.adapter.executeQuery(
+      {
+        tableName: 'budgets',
+        rateLimitKey: 'finance:metrics',
+      },
+      async () => {
+        return this.adapter
+          .buildQuery('budgets', {
+            select: 'amount, spent, period_start, period_end',
+            filters: { category: tx.category },
+          })
+          .lte('period_start', tx.date)
+          .gte('period_end', tx.date)
+          .limit(1);
+      },
+      'read'
+    );
+
+    let budgetUtilization = 0;
+    if (budgetCheck.success && budgetCheck.data) {
+      const budget = Array.isArray(budgetCheck.data) ? budgetCheck.data[0] : budgetCheck.data;
+      budgetUtilization = budget.amount ? ((budget.spent ?? 0) / budget.amount) * 100 : 0;
+    }
+
     return {
       success: true,
       data: {
-        impactOnCashFlow: 0,
-        budgetUtilization: 0,
-        categoryTotal: 0,
-        taxImpact: 0,
+        impactOnCashFlow,
+        budgetUtilization,
+        categoryTotal,
+        taxImpact,
       },
       meta: {
         requestId: crypto.randomUUID(),
-        source: 'calculation'
-      }
+        source: 'calculation',
+      },
     };
   }
 
