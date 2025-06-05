@@ -35,10 +35,10 @@ The Train Station Dashboard is a **production-ready venue management platform** 
 
 | **Module** | **Description** | **Status** |
 |------------|----------------|------------|
-| 📊 **Analytics Dashboard** | Real-time metrics and KPIs | 🚧 In Progress |
-| 🎤 **Artist Management** | Booking, contracts, and artist CRM | 🚧 In Progress |
-| 🎫 **Ticketing System** | Event ticketing and seat management | 🚧 In Progress |
-| 💰 **Financial Management** | Revenue tracking and reports | 🚧 In Progress |
+| 📊 **Analytics Dashboard** | Real-time metrics and KPIs | 🟡 Beta |
+| 🎤 **Artist Management** | Booking, contracts, and artist CRM | 🟡 Beta |
+| 🎫 **Ticketing System** | Event ticketing and seat management | 🟡 Beta |
+| 💰 **Financial Management** | Revenue tracking and reports | 🟡 Beta |
 | 📦 **Inventory Control** | Stock management and ordering | 🟡 Beta |
 | 🔧 **Equipment Management** | Asset tracking and repairs | ⏳ Planned |
 | 👥 **CRM & Customer Management** | Customer profiles and engagement | 🚧 In Progress |
