@@ -40,7 +40,7 @@ The Train Station Dashboard is a **production-ready venue management platform** 
 | 🎫 **Ticketing System** | Event ticketing and seat management | 🟡 Beta |
 | 💰 **Financial Management** | Revenue tracking and reports | 🟡 Beta |
 | 📦 **Inventory Control** | Stock management and ordering | 🟡 Beta |
-| 🔧 **Equipment Management** | Asset tracking and repairs | 🚧 In Progress |
+| 🔧 **Equipment Management** | Asset tracking and repairs | 🟡 Beta |
 | 👥 **CRM & Customer Management** | Customer profiles and engagement | 🟡 Beta |
 | 📅 **Event Calendar** | Scheduling and venue availability | 🟡 Beta |
 | 🏗️ **Floor Plan Editor** | Interactive layout design | 🟡 Beta |
