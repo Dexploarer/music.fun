@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: process.env.NEXT_PUBLIC_APP_URL,
+    url: import.meta.env.VITE_APP_URL,
     siteName: 'ArtistHub',
     title: 'ArtistHub - Artist & Manager Dashboard',
     description: 'The ultimate platform for artists and managers to grow their careers',
