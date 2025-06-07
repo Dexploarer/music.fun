@@ -19,4 +19,4 @@ jobs:
       - name: Validate env template
         run: |
           grep VITE_OPENAI_API_KEY env.template
-          grep NEXT_PUBLIC_SUPABASE_URL env.template
+          grep VITE_SUPABASE_URL env.template

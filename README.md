@@ -115,13 +115,13 @@ npm run dev
    ```
    
    Configure the following required variables:
-   - `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
-   - `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key
+  - `VITE_SUPABASE_URL` - Your Supabase project URL
+  - `VITE_SUPABASE_ANON_KEY` - Supabase anonymous key
+  - `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key
    
    Optional integrations:
-   - AI: `OPENAI_API_KEY` for AI features (GPT-4.1 Mini, o4-mini, GPT-4o)
-   - Payments: `STRIPE_PUBLISHABLE_KEY`, `STRIPE_SECRET_KEY`
+  - AI: `VITE_OPENAI_API_KEY` for AI features (GPT-4.1 Mini, o4-mini, GPT-4o)
+  - Payments: `VITE_STRIPE_PUBLISHABLE_KEY`, `VITE_STRIPE_SECRET_KEY`
    - Social: Instagram, Facebook, Twitter API keys
    - Storage: Cloudinary configuration
 
