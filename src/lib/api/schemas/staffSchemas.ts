@@ -510,7 +510,7 @@ export const validateStaffBusinessRules = {
     return { valid: true };
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   canSchedule: (staff: Staff, _startTime: string, _endTime: string): { valid: boolean; reason?: string } => {
     if (!staff.isActive) {
       return {

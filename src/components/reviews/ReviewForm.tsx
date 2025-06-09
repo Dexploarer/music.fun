@@ -78,7 +78,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
       if (questions && questions.length > 0) {
         questions.forEach(question => {
           if (responses[question.id] !== undefined) {
-            let response: Omit<FeedbackResponse, 'id' | 'reviewId' | 'createdAt'> = {
+            const response: Omit<FeedbackResponse, 'id' | 'reviewId' | 'createdAt'> = {
               questionId: question.id,
               responseText: null,
               responseRating: null,
