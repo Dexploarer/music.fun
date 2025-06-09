@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { Calendar, momentLocalizer, type SlotInfo } from 'react-big-calendar';
 import moment from 'moment';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus, Filter, Search, Eye } from 'lucide-react';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus, Search, Eye } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Breadcrumbs, { useBreadcrumbs } from '../components/navigation/Breadcrumbs';
@@ -24,9 +24,7 @@ interface Event {
   artistIds?: string[];
 }
 
-interface CalendarViewProps {}
-
-const CalendarView: React.FC<CalendarViewProps> = () => {
+const CalendarView: React.FC = () => {
   const navigate = useNavigate();
   const breadcrumbs = useBreadcrumbs();
   
@@ -120,7 +118,7 @@ const CalendarView: React.FC<CalendarViewProps> = () => {
     setSelectedEvent(event);
   };
 
-  const handleSelectSlot = (slotInfo: any) => {
+  const handleSelectSlot = (slotInfo: SlotInfo) => {
     // Navigate to create event with pre-selected date
     const selectedDate = moment(slotInfo.start).format('YYYY-MM-DD');
     const selectedTime = moment(slotInfo.start).format('HH:mm');
@@ -131,7 +129,7 @@ const CalendarView: React.FC<CalendarViewProps> = () => {
     setDate(newDate);
   };
 
-  const handleViewChange = (newView: any) => {
+  const handleViewChange = (newView: 'month' | 'week' | 'day' | 'agenda') => {
     setView(newView);
   };
 
