@@ -95,7 +95,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await customerService.createCustomer(body);
           return createResponse(result, result.success ? 201 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -119,7 +119,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await customerService.updateCustomer(id, body);
           return createResponse(result, result.success ? 200 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -151,7 +151,7 @@ const routes: RouteHandler[] = [
           const interactionData = { ...body, customerId: id };
           const result = await customerService.createInteraction(interactionData);
           return createResponse(result, result.success ? 201 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -176,7 +176,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await inventoryService.createInventoryItem(body);
           return createResponse(result, result.success ? 201 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -200,7 +200,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await inventoryService.updateInventoryItem(id, body);
           return createResponse(result, result.success ? 200 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -222,7 +222,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await inventoryService.recordTransaction(body);
           return createResponse(result, result.success ? 201 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -244,7 +244,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await inventoryService.createCategory(body);
           return createResponse(result, result.success ? 201 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -269,7 +269,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await financeService.createTransaction(body);
           return createResponse(result, result.success ? 201 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -291,7 +291,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await financeService.createAccount(body);
           return createResponse(result, result.success ? 201 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -313,7 +313,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await financeService.createBudget(body);
           return createResponse(result, result.success ? 201 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -333,15 +333,18 @@ const routes: RouteHandler[] = [
         const dateTo = url.searchParams.get('dateTo');
         
         switch (reportType) {
-          case 'profit-loss':
+          case 'profit-loss': {
             const plResult = await financeService.generateProfitLossReport(dateFrom!, dateTo!);
             return createResponse(plResult, plResult.success ? 200 : 400);
-          case 'balance-sheet':
+          }
+          case 'balance-sheet': {
             const bsResult = await financeService.generateBalanceSheetReport(dateFrom!);
             return createResponse(bsResult, bsResult.success ? 200 : 400);
-          case 'cash-flow':
+          }
+          case 'cash-flow': {
             const cfResult = await financeService.generateCashFlowReport(dateFrom!, dateTo!);
             return createResponse(cfResult, cfResult.success ? 200 : 400);
+          }
           default:
             return createErrorResponse('Invalid report type', 400);
         }
@@ -367,7 +370,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await staffService.createStaffMember(body);
           return createResponse(result, result.success ? 201 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -391,7 +394,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await staffService.updateStaffMember(id, body);
           return createResponse(result, result.success ? 200 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -423,7 +426,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await staffService.createScheduleEntry(body);
           return createResponse(result, result.success ? 201 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -448,7 +451,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await eventsService.createEvent(body);
           return createResponse(result, result.success ? 201 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -472,7 +475,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await eventsService.updateEvent(id, body);
           return createResponse(result, result.success ? 200 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -502,7 +505,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await artistService.createArtist(body);
           return createResponse(result, result.success ? 201 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -526,7 +529,7 @@ const routes: RouteHandler[] = [
           const body = await req.json();
           const result = await artistService.updateArtist(id, body);
           return createResponse(result, result.success ? 200 : 400);
-        } catch (error) {
+        } catch {
           return createErrorResponse('Invalid JSON body', 400);
         }
       }
@@ -563,8 +566,8 @@ Deno.serve(async (req: Request) => {
     // No route matched
     return createErrorResponse('Route not found', 404);
     
-  } catch (error) {
-    console.error('API Error:', error);
+  } catch (err) {
+    console.error('API Error:', err);
     return createErrorResponse('Internal server error', 500);
   }
 }); 
