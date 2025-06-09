@@ -115,7 +115,7 @@ const CustomerCard: React.FC<{
     const visits = customer.metrics?.totalInteractions || 0;
     
     let tier: 'Bronze' | 'Silver' | 'Gold' | 'Platinum' = 'Bronze';
-    let points = Math.floor(totalSpent / 10);
+    const points = Math.floor(totalSpent / 10);
     let nextTierPoints = 500;
     
     if (totalSpent >= 5000) { tier = 'Platinum'; nextTierPoints = 0; }

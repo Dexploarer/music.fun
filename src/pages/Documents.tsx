@@ -587,7 +587,7 @@ const Documents: React.FC = () => {
 
   // Filtered and sorted documents
   const filteredDocuments = useMemo(() => {
-    let filtered = mockDocuments.filter(doc => {
+    const filtered = mockDocuments.filter(doc => {
       const matchesSearch = doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            doc.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            doc.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));

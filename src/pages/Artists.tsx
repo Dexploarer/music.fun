@@ -503,7 +503,7 @@ const Artists: React.FC = () => {
       return [];
     }
     
-    let filtered = artists.filter((artist) => {
+    const filtered = artists.filter((artist) => {
       // Text search
       const matchesSearch = !searchTerm || 
     artist.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
