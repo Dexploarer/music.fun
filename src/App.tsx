@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
@@ -10,7 +10,6 @@ import { ThemeProvider } from './contexts/ThemeContext';
 
 // PWA Components
 import { PWAInstallPrompt, PWAUpdateNotification } from './components/ui/PWAInstallPrompt';
-import { useMobile } from './hooks/useMobile';
 import { usePerformance } from './hooks/usePerformance';
 
 // Security
@@ -62,7 +61,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
-      retry: (failureCount, error) => failureCount < 2, // Reduce retries on mobile
+      retry: failureCount => failureCount < 2, // Reduce retries on mobile
       refetchOnWindowFocus: false, // Disable on mobile for better performance
     },
   },
@@ -80,8 +79,8 @@ const AppLoading: React.FC = () => (
 );
 
 // Lazy route wrapper with performance tracking
-const LazyRoute: React.FC<{ 
-  component: React.LazyExoticComponent<React.ComponentType<any>>;
+const LazyRoute: React.FC<{
+  component: React.LazyExoticComponent<React.ComponentType<unknown>>;
   componentName: string;
   fallbackType?: 'card' | 'table' | 'chart' | 'text';
 }> = ({ component: Component, componentName, fallbackType = 'card' }) => (

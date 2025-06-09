@@ -7,9 +7,9 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   hover?: boolean;
 }
 
-interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
-interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {}
-interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
+type CardHeaderProps = React.HTMLAttributes<HTMLDivElement>
+type CardContentProps = React.HTMLAttributes<HTMLDivElement>
+type CardFooterProps = React.HTMLAttributes<HTMLDivElement>
 
 const Card: React.FC<CardProps> = ({
   className,
