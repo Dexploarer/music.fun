@@ -224,6 +224,7 @@ export { customerService } from './services/customerService';
 export { inventoryService } from './services/inventoryService';
 export { financeService } from './services/financeService';
 export { staffService } from './services/staffService';
+export { payrollService } from './services/payrollService';
 
 // Adapters
 export { SupabaseAdapter } from './adapters/supabaseAdapter';
@@ -308,6 +309,7 @@ export * from './services/customerService';
 export * from './services/inventoryService';
 export * from './services/financeService';
 export * from './services/staffService';
+export * from './services/payrollService';
 
 // Export all schemas
 export * from './schemas/eventSchemas';

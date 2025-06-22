@@ -35,6 +35,7 @@ import { format, addDays, startOfWeek, endOfWeek } from 'date-fns';
 import Breadcrumbs, { useBreadcrumbs } from '../components/navigation/Breadcrumbs';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { useStaffManagement } from '../hooks/useStaffManagement';
+import { payrollService } from '../lib/api/services/payrollService';
 import { toast } from 'react-hot-toast';
 import { StaffMember, Shift } from '../types';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -1176,6 +1177,24 @@ const StaffManagement: React.FC = () => {
     toast.info(`Shift: ${shift.title} at ${shift.location}`);
   };
 
+  const handleClockIn = async (staffId: string) => {
+    try {
+      await payrollService.logClockIn(staffId);
+      toast.success('Clocked in');
+    } catch {
+      toast.error('Clock in failed');
+    }
+  };
+
+  const handleClockOut = async (entryId: string) => {
+    try {
+      await payrollService.logClockOut(entryId);
+      toast.success('Clocked out');
+    } catch {
+      toast.error('Clock out failed');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-zinc-800 p-4 sm:p-6">
       <div className="mx-auto max-w-7xl space-y-8">
@@ -1442,15 +1461,34 @@ const StaffManagement: React.FC = () => {
         
         {/* Time Tracking Tab */}
         <TabsContent value="timetracking">
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 p-8 text-center backdrop-blur-sm border border-zinc-700/50">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent"></div>
-              <div className="relative">
-                <Timer size={48} className="mx-auto text-blue-500/50 mb-4" />
-                <h2 className="text-xl font-semibold text-white mb-2">Time Tracking System</h2>
-                <p className="text-gray-400">Advanced time tracking with payroll integration coming soon...</p>
+          <div className="space-y-4">
+            {staff.map(member => {
+              const active = timeEntries.find(e => e.staffId === member.id && !e.clockOutTime);
+              const total = payrollService.calculateHours(timeEntries, member.id);
+              return (
+                <div
+                  key={member.id}
+                  className="flex items-center justify-between p-4 rounded-xl bg-zinc-800/30"
+                >
+                  <div>
+                    <p className="text-white font-medium">
+                      {member.firstName} {member.lastName}
+                    </p>
+                    <p className="text-xs text-gray-400">Hours: {total.toFixed(2)}</p>
+                  </div>
+                  <button
+                    onClick={() =>
+                      active ? handleClockOut(active.id) : handleClockIn(member.id)
+                    }
+                    className="px-3 py-2 rounded-lg bg-blue-600 text-white"
+                  >
+                    {active ? 'Clock Out' : 'Clock In'}
+                  </button>
                 </div>
-                          </div>
-          </TabsContent>
+              );
+            })}
+          </div>
+        </TabsContent>
           
           {/* Performance Tab */}
           <TabsContent value="performance">
