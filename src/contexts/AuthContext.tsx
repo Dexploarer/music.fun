@@ -175,6 +175,7 @@ interface AuthContextType {
   signOut: () => Promise<{ error: AuthError | null }>;
   resetPassword: (email: string) => Promise<{ error: AuthError | null }>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
+  updateSecuritySettings: (settings: Partial<SecuritySettings>) => Promise<void>;
   
   // Permission Methods
   hasPermission: (permission: string) => boolean;
@@ -653,6 +654,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateSecuritySettings = async (settings: Partial<SecuritySettings>) => {
+    if (!user) throw new Error('User not authenticated');
+
+    try {
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .update({ security_settings: { ...userProfile?.security_settings, ...settings } })
+        .eq('id', user.id)
+        .select('security_settings')
+        .single();
+
+      if (error) throw error;
+
+      setUserProfile(prev =>
+        prev ? { ...prev, security_settings: data.security_settings } : null
+      );
+      await logAuditEvent('profile_update', 'Security settings updated', 'low');
+    } catch (error) {
+      console.error('Update security settings error:', error);
+      await logAuditEvent('profile_update', `Security settings update failed: ${error}`, 'medium');
+      throw error;
+    }
+  };
+
   // Enhanced Security Methods
   const enableTwoFactor = async (): Promise<{ secret: string; qrCodeUrl: string; backupCodes: string[] }> => {
     const secret = Array.from({ length: 32 }, () => 
@@ -906,6 +931,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signOut,
     resetPassword,
     updateProfile,
+    updateSecuritySettings,
     hasPermission,
     hasRole,
     isAdmin,

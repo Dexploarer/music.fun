@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { TwoFactorSetup } from './TwoFactorSetup';
+import { SecuritySettingsForm } from './SecuritySettingsForm';
 import {
   Shield,
   AlertTriangle,
@@ -671,12 +672,7 @@ export const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ onClose })
               {activeTab === 'devices' && renderDevices()}
               {activeTab === 'alerts' && renderAlerts()}
               {activeTab === 'audit' && renderAuditLog()}
-              {activeTab === 'settings' && (
-                <div className="text-center py-12 text-gray-400">
-                  <Settings className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>Security settings configuration coming soon</p>
-                </div>
-              )}
+              {activeTab === 'settings' && <SecuritySettingsForm />}
             </>
           )}
         </div>
